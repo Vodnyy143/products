@@ -3,7 +3,7 @@
 public class Order
 {
     public int  Id { get; set; }
-    public string Article { get; set; }
+    public string Article { get; set; } = string.Empty;
     public DateTime OrderDate { get; set; }
     public DateTime? DeliveryDate { get; set; }
     public int? PickupPointId { get; set; }

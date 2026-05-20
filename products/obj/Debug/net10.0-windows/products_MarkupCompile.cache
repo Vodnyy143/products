@@ -10,11 +10,11 @@ none
 false
 TRACE;DEBUG;NET;NET10_0;NETCOREAPP;WINDOWS;WINDOWS7_0;NET5_0_OR_GREATER;NET6_0_OR_GREATER;NET7_0_OR_GREATER;NET8_0_OR_GREATER;NET9_0_OR_GREATER;NET10_0_OR_GREATER;NETCOREAPP3_0_OR_GREATER;NETCOREAPP3_1_OR_GREATER;WINDOWS7_0_OR_GREATER
 C:\Users\GM50\RiderProjects\products\products\App.xaml
-11407045341
-
-16-241617252
-220-641306155
-MainWindow.xaml;
+8-468974927
+32113967568
+32-998119184
+227-1384720623
+MainWindow.xaml;Views\AdminWindow.xaml;Views\ClientWindow.xaml;Views\GuestWindow.xaml;Views\LoginWindow.xaml;Views\ManagerWindow.xaml;Views\OrderListWindow.xaml;Views\ProductEditWindow.xaml;
 
 False
 
