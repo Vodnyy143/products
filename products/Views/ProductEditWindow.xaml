@@ -6,7 +6,164 @@
         xmlns:local="clr-namespace:products.Views"
         mc:Ignorable="d"
         Title="ProductEditWindow" Height="450" Width="800">
-    <Grid>
-        
-    </Grid>
+     <ScrollViewer VerticalScrollBarVisibility="Auto">
+        <Grid Margin="20">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <!-- Заголовок -->
+                <RowDefinition Height="Auto"/>
+                <!-- Фото -->
+                <RowDefinition Height="*"/>
+                <!-- Поля -->
+                <RowDefinition Height="Auto"/>
+                <!-- Кнопки -->
+            </Grid.RowDefinitions>
+
+            <!-- Заголовок -->
+            <TextBlock Grid.Row="0"
+                       Text="{Binding WindowTitle}"
+                       FontSize="20"
+                       FontWeight="Bold"
+                       Margin="0,0,0,15"/>
+
+            <!-- Фото с кнопкой выбора -->
+            <StackPanel Grid.Row="1" Orientation="Horizontal" Margin="0,0,0,15">
+                <Border BorderBrush="Black" BorderThickness="1"
+                        Width="200" Height="135">
+                    <Image Source="{Binding PhotoPreview}" Stretch="Uniform"/>
+                </Border>
+                <StackPanel Margin="15,0,0,0" VerticalAlignment="Center">
+                    <Button Content="📷 Выбрать фото"
+                            Command="{Binding PickPhotoCommand}"
+                            Width="160" Height="35"/>
+                    <TextBlock Text="Размер: 300×200 px"
+                               FontSize="11"
+                               Foreground="Gray"
+                               Margin="0,5,0,0"
+                               HorizontalAlignment="Center"/>
+                </StackPanel>
+            </StackPanel>
+
+            <!-- Поля формы -->
+            <Grid Grid.Row="2">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="180"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <!-- ID (только при редактировании) -->
+                    <RowDefinition Height="Auto"/>
+                    <!-- Артикул -->
+                    <RowDefinition Height="Auto"/>
+                    <!-- Название -->
+                    <RowDefinition Height="Auto"/>
+                    <!-- Категория -->
+                    <RowDefinition Height="Auto"/>
+                    <!-- Описание -->
+                    <RowDefinition Height="Auto"/>
+                    <!-- Производитель -->
+                    <RowDefinition Height="Auto"/>
+                    <!-- Поставщик -->
+                    <RowDefinition Height="Auto"/>
+                    <!-- Цена -->
+                    <RowDefinition Height="Auto"/>
+                    <!-- Единица -->
+                    <RowDefinition Height="Auto"/>
+                    <!-- Количество -->
+                    <RowDefinition Height="Auto"/>
+                    <!-- Скидка -->
+                </Grid.RowDefinitions>
+
+                <!-- ID (скрыт при добавлении) -->
+                <Label Grid.Row="0" Grid.Column="0"
+                       Content="ID:"
+                       Visibility="{Binding IdVisibility}"/>
+                <TextBox Grid.Row="0" Grid.Column="1"
+                         Text="{Binding Product.Id}"
+                         IsReadOnly="True"
+                         Background="#F0F0F0"
+                         Visibility="{Binding IdVisibility}"/>
+
+                <Label Grid.Row="1" Grid.Column="0" Content="Артикул: *"/>
+                <TextBox Grid.Row="1" Grid.Column="1"
+                         Text="{Binding Product.Article, UpdateSourceTrigger=PropertyChanged}"/>
+
+                <Label Grid.Row="2" Grid.Column="0" Content="Наименование: *"/>
+                <TextBox Grid.Row="2" Grid.Column="1"
+                         Text="{Binding Product.Name, UpdateSourceTrigger=PropertyChanged}"/>
+
+                <Label Grid.Row="3" Grid.Column="0" Content="Категория:"/>
+                <ComboBox Grid.Row="3" Grid.Column="1"
+                          ItemsSource="{Binding Categories}"
+                          SelectedValue="{Binding Product.CategoryId}"
+                          SelectedValuePath="Id"
+                          DisplayMemberPath="Name"/>
+
+                <Label Grid.Row="4" Grid.Column="0" Content="Описание:"
+                       VerticalAlignment="Top" Margin="3,5,0,0"/>
+                <TextBox Grid.Row="4" Grid.Column="1"
+                         Text="{Binding Product.Description, UpdateSourceTrigger=PropertyChanged}"
+                         AcceptsReturn="True"
+                         TextWrapping="Wrap"
+                         Height="60"
+                         VerticalScrollBarVisibility="Auto"/>
+
+                <Label Grid.Row="5" Grid.Column="0" Content="Производитель:"/>
+                <ComboBox Grid.Row="5" Grid.Column="1"
+                          ItemsSource="{Binding Manufacturers}"
+                          SelectedValue="{Binding Product.ManufacturerId}"
+                          SelectedValuePath="Id"
+                          DisplayMemberPath="Name"/>
+
+                <Label Grid.Row="6" Grid.Column="0" Content="Поставщик:"/>
+                <ComboBox Grid.Row="6" Grid.Column="1"
+                          ItemsSource="{Binding Suppliers}"
+                          SelectedValue="{Binding Product.SupplierId}"
+                          SelectedValuePath="Id"
+                          DisplayMemberPath="Name"/>
+
+                <Label Grid.Row="7" Grid.Column="0" Content="Цена (₽): *"/>
+                <TextBox Grid.Row="7" Grid.Column="1"
+                         Text="{Binding Product.Price, UpdateSourceTrigger=PropertyChanged, StringFormat={}{0:0.00}}"/>
+
+                <Label Grid.Row="8" Grid.Column="0" Content="Единица измерения:"/>
+                <ComboBox Grid.Row="8" Grid.Column="1"
+                          ItemsSource="{Binding Units}"
+                          SelectedValue="{Binding Product.UnitId}"
+                          SelectedValuePath="Id"
+                          DisplayMemberPath="Name"/>
+
+                <Label Grid.Row="9" Grid.Column="0" Content="Количество на складе:"/>
+                <TextBox Grid.Row="9" Grid.Column="1"
+                         Text="{Binding Product.Quantity, UpdateSourceTrigger=PropertyChanged}"/>
+
+                <Label Grid.Row="10" Grid.Column="0" Content="Скидка (%):"/>
+                <TextBox Grid.Row="10" Grid.Column="1"
+                         Text="{Binding Product.Discount, UpdateSourceTrigger=PropertyChanged}"/>
+            </Grid>
+
+            <!-- Кнопки -->
+            <StackPanel Grid.Row="3"
+                        Orientation="Horizontal"
+                        HorizontalAlignment="Right"
+                        Margin="0,20,0,0">
+                <Button Content="Отмена"
+                        Command="{Binding CancelCommand}"
+                        CommandParameter="{Binding RelativeSource={RelativeSource AncestorType=Window}}"
+                        Background="#FFCCCC"
+                        MinWidth="100"
+                        Height="35"/>
+                <Button Content="💾 Сохранить"
+                        Command="{Binding SaveCommand}"
+                        CommandParameter="{Binding RelativeSource={RelativeSource AncestorType=Window}}"
+                        Background="#00FA9A"
+                        FontWeight="Bold"
+                        MinWidth="120"
+                        Height="35"
+                        IsDefault="True"
+                        Margin="10,0,0,0"/>
+            </StackPanel>
+        </Grid>
+    </ScrollViewer>
 </Window>

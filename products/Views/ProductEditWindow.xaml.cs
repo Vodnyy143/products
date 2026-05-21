@@ -6,7 +6,7 @@ namespace products.Views;
 
 public partial class ProductEditWindow : Window
 {
-    public ProductEditWindow(Product product)
+    public ProductEditWindow(Product? product)
     {
         InitializeComponent();
         DataContext = new ProductEditViewModel(product);

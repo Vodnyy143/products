@@ -6,14 +6,18 @@
         xmlns:local="clr-namespace:products.Views"
         mc:Ignorable="d"
         Title="ManagerWindow" Height="450" Width="800">
-    <Grid>
+   <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
+            <!-- Верхняя шапка с лого и ФИО -->
             <RowDefinition Height="Auto"/>
+            <!-- Панель поиска/фильтра -->
             <RowDefinition Height="*"/>
+            <!-- Список товаров -->
         </Grid.RowDefinitions>
-        
-        <Border Grid.Row="0">
+
+        <!-- Шапка -->
+        <Border Grid.Row="0" Background="#7FFF00" Padding="15,10">
             <Grid>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="Auto"/>
@@ -21,67 +25,169 @@
                     <ColumnDefinition Width="Auto"/>
                     <ColumnDefinition Width="Auto"/>
                 </Grid.ColumnDefinitions>
-                
-                <Image Grid.Column="0" Source="/Resources/Icon.png" Width="40" Height="40"/>
-                
-                <TextBlock Grid.Column="1" Text="ООО Обувь - Управление" VerticalAlignment="Center"/>
-                
-                <StackPanel Grid.Column="2">
-                    <TextBlock Text="Менеджер:"/>
-                    <TextBlock Text="{Binding UserFullName}"/>
+
+                <Image Grid.Column="0" Source="/Resources/Icon.png"
+                       Width="40" Height="40"/>
+
+                <TextBlock Grid.Column="1"
+                           Text="ООО «Обувь» — Управление"
+                           FontSize="18"
+                           FontWeight="Bold"
+                           VerticalAlignment="Center"
+                           Margin="15,0,0,0"/>
+
+                <!-- ФИО менеджера -->
+                <StackPanel Grid.Column="2"
+                            Margin="0,0,15,0"
+                            VerticalAlignment="Center">
+                    <TextBlock Text="Менеджер:" FontSize="12"
+                               HorizontalAlignment="Right"/>
+                    <TextBlock Text="{Binding UserFullName}"
+                               FontWeight="Bold"
+                               HorizontalAlignment="Right"/>
                 </StackPanel>
-                
-                <Button Grid.Column="3" 
+
+                <Button Grid.Column="3"
                         Content="Выйти"
                         Command="{Binding LogoutCommand}"
-                        CommandParameter="{Binding RelativeSource={RelativeSource AncestorType=Window}}"
-                />
+                        CommandParameter="{Binding RelativeSource={RelativeSource AncestorType=Window}}"/>
             </Grid>
         </Border>
-        
-        <Border Grid.Row="1">
-            
+
+        <!-- Панель поиска / фильтра / сортировки -->
+        <Border Grid.Row="1" Background="#F0F0F0" Padding="10" BorderBrush="Gray" BorderThickness="0,0,0,1">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+
+                <!-- ПОИСК (в реальном времени!) -->
+                <DockPanel Grid.Column="0" Margin="0,0,10,0">
+                    <Label Content="🔍 Поиск:" DockPanel.Dock="Left"/>
+                    <TextBox Text="{Binding SearchText, UpdateSourceTrigger=PropertyChanged}"
+                             ToolTip="Поиск по названию, артикулу, описанию, категории, производителю, поставщику"
+                             Height="30"/>
+                </DockPanel>
+
+                <!-- ФИЛЬТР по поставщику -->
+                <StackPanel Grid.Column="1" Orientation="Horizontal">
+                    <Label Content="Поставщик:"/>
+                    <ComboBox Width="200"
+                              ItemsSource="{Binding Suppliers}"
+                              SelectedItem="{Binding SelectedSupplier}"
+                              DisplayMemberPath="Name"
+                              Height="30"/>
+                </StackPanel>
+
+                <!-- СОРТИРОВКА -->
+                <Button Grid.Column="2"
+                        Content="{Binding SortLabel}"
+                        Command="{Binding ToggleSortCommand}"
+                        ToolTip="Сортировка по количеству на складе"
+                        MinWidth="150"
+                        Height="30"
+                        Margin="10,0"/>
+
+                <!-- ЗАКАЗЫ -->
+                <Button Grid.Column="3"
+                        Content="📦 Заказы"
+                        Command="{Binding OpenOrdersCommand}"
+                        Background="#00FA9A"
+                        FontWeight="Bold"
+                        Height="30"
+                        MinWidth="120"/>
+            </Grid>
         </Border>
-        
-        <ListBox 
-            Grid.Row="2"
-            ItemsSource="{Binding FilteredProducts}"
-        >
+
+        <!-- Список товаров -->
+        <ListBox Grid.Row="2"
+                 ItemsSource="{Binding FilteredProducts}"
+                 HorizontalContentAlignment="Stretch"
+                 Margin="10"
+                 BorderThickness="0">
             <ListBox.ItemTemplate>
-                <DataTemplate>
-                    <Grid>
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="120"/>
-                            <ColumnDefinition Width="*"/>
-                            <ColumnDefinition Width="100"/>
-                        </Grid.ColumnDefinitions>
-                        
-                        <Image Grid.Column="0" Source="{Binding PhotoPath}" Width="100" Height="100"/>
-                        
-                        <StackPanel Grid.Column="1">
-                            <TextBlock>
-                                <Run Text="{Binding Category.Name}"/>
-                                <Run Text="{Binding Name}"/>
-                            </TextBlock>
-                            <TextBlock Text="{Binding Description}"/>
-                            <TextBlock>
-                                <Run Text="Производитель:"/>
-                                <Run Text="{Binding Manufacturer.Name}"/>
-                            </TextBlock>
-                            <TextBlock>
-                                <Run Text="Поставщик:"/>
-                                <Run Text="{Binding Supplier.Name}"/>
-                            </TextBlock>
-                            <TextBlock>
-                                <Run Text="Единица измерения:"/>
-                                <Run Text="{Binding Unit.Name}"/>
-                            </TextBlock>
-                            <TextBlock>
-                                <Run Text="Количество на складе:"/>
-                                <Run Text="{Binding Quantity}"/>
-                            </TextBlock>
-                        </StackPanel>
-                    </Grid>
+                  <DataTemplate>
+                    <Border 
+                            BorderBrush="Gray"
+                            BorderThickness="1"
+                            Padding="10"
+                            Margin="0,3">
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="120"/>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="100"/>
+                                <ColumnDefinition Width="Auto"/>
+                                <!-- Кнопки -->
+                            </Grid.ColumnDefinitions>
+
+                            <Border Grid.Column="0" BorderBrush="Black" BorderThickness="1"
+                                    Width="100" Height="100">
+                                <Image Source="{Binding PhotoPath}" Stretch="Uniform"/>
+                            </Border>
+
+                            <StackPanel Grid.Column="1" Margin="15,0,0,0">
+                                <TextBlock FontWeight="Bold" FontSize="15">
+                                    <Run Text="{Binding Category.Name}"/>
+                                    <Run Text=" | "/>
+                                    <Run Text="{Binding Name}"/>
+                                </TextBlock>
+                                <TextBlock Text="{Binding Description}" TextWrapping="Wrap"/>
+                                <TextBlock>
+                                    <Run Text="Артикул: "/>
+                                    <Run Text="{Binding Article}" FontWeight="Bold"/>
+                                </TextBlock>
+                                <TextBlock>
+                                    <Run Text="Производитель: "/>
+                                    <Run Text="{Binding Manufacturer.Name}"/>
+                                </TextBlock>
+                                <TextBlock>
+                                    <Run Text="Поставщик: "/>
+                                    <Run Text="{Binding Supplier.Name}"/>
+                                </TextBlock>
+                                <StackPanel Orientation="Horizontal">
+                                    <TextBlock Text="Цена: "/>
+                                    <TextBlock Text="{Binding Price, StringFormat={}{0:0.00} ₽}"
+                                               Foreground="Red"
+                                               TextDecorations="Strikethrough"/>
+                                    <TextBlock Text="{Binding FinalPrice, StringFormat={}{0:0.00} ₽}"
+                                               Foreground="Black" Margin="8,0,0,0" FontWeight="Bold"/>
+                                </StackPanel>
+                                <TextBlock>
+                                    <Run Text="На складе: "/>
+                                    <Run Text="{Binding Quantity}" FontWeight="Bold"/>
+                                </TextBlock>
+                            </StackPanel>
+
+                            <Border Grid.Column="2" BorderBrush="Black" BorderThickness="1"
+                                    VerticalAlignment="Center">
+                                <StackPanel HorizontalAlignment="Center" Margin="5">
+                                    <TextBlock Text="Скидка:" HorizontalAlignment="Center" FontSize="12"/>
+                                    <TextBlock Text="{Binding Discount, StringFormat={}{0}%}"
+                                               HorizontalAlignment="Center"
+                                               FontSize="22" FontWeight="Bold"/>
+                                </StackPanel>
+                            </Border>
+
+                            <!-- Кнопки CRUD (только для админа) -->
+                            <StackPanel Grid.Column="3" VerticalAlignment="Center" Margin="10,0,0,0">
+                                <Button Content="✎ Изменить"
+                                        Command="{Binding DataContext.EditProductCommand,
+                                                  RelativeSource={RelativeSource AncestorType=Window}}"
+                                        CommandParameter="{Binding}"
+                                        Width="100" Margin="3"/>
+                                <Button Content="✕ Удалить"
+                                        Command="{Binding DataContext.DeleteProductCommand,
+                                                  RelativeSource={RelativeSource AncestorType=Window}}"
+                                        CommandParameter="{Binding}"
+                                        Background="#FFB6B6"
+                                        Width="100" Margin="3"/>
+                            </StackPanel>
+                        </Grid>
+                    </Border>
                 </DataTemplate>
             </ListBox.ItemTemplate>
         </ListBox>

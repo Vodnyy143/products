@@ -19,17 +19,14 @@ public partial class ManagerViewModel: ObservableObject
     // Поставщики для фильтра (с "Все поставщики" первым элементом)
     public ObservableCollection<Supplier> Suppliers { get; } = new();
 
-    // === Поиск ===
     [ObservableProperty]
     [NotifyPropertyChangedFor(nameof(FilteredProducts))]
     private string _searchText = "";
 
-    // === Фильтр по поставщику ===
     [ObservableProperty]
     [NotifyPropertyChangedFor(nameof(FilteredProducts))]
     private Supplier? _selectedSupplier;
 
-    // === Сортировка ===
     [ObservableProperty]
     [NotifyPropertyChangedFor(nameof(FilteredProducts))]
     private bool _sortAscending = true;
@@ -57,7 +54,6 @@ public partial class ManagerViewModel: ObservableObject
 
     private void LoadSuppliers()
     {
-        // Первым элементом — "Все поставщики" со специальным Id = 0
         Suppliers.Add(new Supplier { Id = 0, Name = "Все поставщики" });
         foreach (var s in _db.Suppliers.OrderBy(s => s.Name))
             Suppliers.Add(s);
@@ -65,18 +61,15 @@ public partial class ManagerViewModel: ObservableObject
         SelectedSupplier = Suppliers.First();
     }
 
-    // === Главное вычисляемое свойство ===
     public IEnumerable<Product> FilteredProducts
     {
         get
         {
             IEnumerable<Product> query = _allProducts;
 
-            // 1. Фильтр по поставщику (Id=0 = "Все" — фильтр не применяется)
             if (SelectedSupplier is not null && SelectedSupplier.Id != 0)
                 query = query.Where(p => p.SupplierId == SelectedSupplier.Id);
 
-            // 2. Поиск по всем текстовым полям одновременно
             if (!string.IsNullOrWhiteSpace(SearchText))
             {
                 var s = SearchText.ToLower();
@@ -89,7 +82,6 @@ public partial class ManagerViewModel: ObservableObject
                     (p.Supplier?.Name ?? "").ToLower().Contains(s));
             }
 
-            // 3. Сортировка по количеству на складе
             return SortAscending
                 ? query.OrderBy(p => p.Quantity)
                 : query.OrderByDescending(p => p.Quantity);

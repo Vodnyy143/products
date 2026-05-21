@@ -150,3 +150,5 @@ C:\Users\GM50\RiderProjects\products\products\obj\Debug\net10.0-windows\Views\Ma
 C:\Users\GM50\RiderProjects\products\products\obj\Debug\net10.0-windows\Views\OrderListWindow.baml
 C:\Users\GM50\RiderProjects\products\products\obj\Debug\net10.0-windows\Views\ProductEditWindow.baml
 C:\Users\GM50\RiderProjects\products\products\bin\Debug\net10.0-windows\Resources\Tovar.xlsx
+C:\Users\GM50\RiderProjects\products\products\obj\Debug\net10.0-windows\Views\OrderEditWindow.g.cs
+C:\Users\GM50\RiderProjects\products\products\obj\Debug\net10.0-windows\Views\OrderEditWindow.baml

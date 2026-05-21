@@ -52,8 +52,8 @@ public partial class LoginViewModel: ObservableObject
     {
         Window window = user.Role.Name switch
         {
-            "Администратор" => new ClientWindow(user),
-            "Менеджер" => new ClientWindow(user),
+            "Администратор" => new AdminWindow(user),
+            "Менеджер" => new ManagerWindow(user),
             _ => new ClientWindow(user),
         };
         

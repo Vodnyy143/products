@@ -6,7 +6,132 @@
         xmlns:local="clr-namespace:products.Views"
         mc:Ignorable="d"
         Title="OrderListWindow" Height="450" Width="800">
-    <Grid>
-        
+     <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+        <!-- Шапка -->
+        <Border Grid.Row="0" Background="#7FFF00" Padding="15,10">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+
+                <TextBlock Grid.Column="0"
+                           Text="📦 Управление заказами"
+                           FontSize="18"
+                           FontWeight="Bold"
+                           VerticalAlignment="Center"/>
+
+                <!-- Кнопка "Добавить заказ" видна только администратору -->
+                <Button Grid.Column="1"
+                        Content="+ Добавить заказ"
+                        Command="{Binding AddOrderCommand}"
+                        Background="#00FA9A"
+                        FontWeight="Bold"
+                        Visibility="{Binding IsAdmin}"
+                        Margin="0,0,10,0"/>
+
+                <Button Grid.Column="2"
+                        Content="← Назад"
+                        Command="{Binding CloseCommand}"
+                        CommandParameter="{Binding RelativeSource={RelativeSource AncestorType=Window}}"/>
+            </Grid>
+        </Border>
+
+        <!-- Список заказов -->
+        <ListBox Grid.Row="1"
+                 ItemsSource="{Binding Orders}"
+                 HorizontalContentAlignment="Stretch"
+                 Margin="10"
+                 BorderThickness="0">
+            <ListBox.ItemTemplate>
+                <DataTemplate>
+                    <Border BorderBrush="Gray"
+                            BorderThickness="1"
+                            Padding="10"
+                            Margin="0,3"
+                            Background="White">
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="Auto"/>
+                                <ColumnDefinition Width="Auto"/>
+                            </Grid.ColumnDefinitions>
+
+                            <!-- Информация о заказе (по макету ТЗ) -->
+                            <StackPanel Grid.Column="0">
+                                <TextBlock FontWeight="Bold" FontSize="16">
+                                    <Run Text="Артикул заказа: "/>
+                                    <Run Text="{Binding Article}"/>
+                                </TextBlock>
+                                <TextBlock>
+                                    <Run Text="Статус заказа: "/>
+                                    <Run Text="{Binding Status.Name}" FontWeight="SemiBold"/>
+                                </TextBlock>
+                                <TextBlock TextWrapping="Wrap">
+                                    <Run Text="Адрес пункта выдачи: "/>
+                                    <Run Text="{Binding PickupPoint.Address}"/>
+                                </TextBlock>
+                                <TextBlock>
+                                    <Run Text="Дата заказа: "/>
+                                    <Run Text="{Binding OrderDate, StringFormat=\{0:dd.MM.yyyy\}}"/>
+                                </TextBlock>
+                            </StackPanel>
+
+                            <!-- Дата доставки (справа) -->
+                            <Border Grid.Column="1"
+                                    BorderBrush="Black"
+                                    BorderThickness="1"
+                                    Padding="10"
+                                    VerticalAlignment="Center"
+                                    Margin="10,0">
+                                <StackPanel>
+                                    <TextBlock Text="Дата доставки:"
+                                               HorizontalAlignment="Center"
+                                               FontSize="12"/>
+                                    <TextBlock Text="{Binding DeliveryDate, StringFormat=\{0:dd.MM.yyyy\}}"
+                                               HorizontalAlignment="Center"
+                                               FontWeight="Bold"
+                                               FontSize="16"/>
+                                </StackPanel>
+                            </Border>
+
+                            <!-- Кнопки CRUD (видны только админу) -->
+                            <StackPanel Grid.Column="2"
+                                        VerticalAlignment="Center"
+                                        Visibility="{Binding DataContext.IsAdmin}">
+                                <Button Content="✎"
+                                        Command="{Binding DataContext.EditOrderCommand,
+                                                  RelativeSource={RelativeSource AncestorType=Window}}"
+                                        CommandParameter="{Binding}"
+                                        ToolTip="Редактировать"
+                                        Width="40" Margin="3"/>
+                                <Button Content="✕"
+                                        Command="{Binding DataContext.DeleteOrderCommand,
+                                                  RelativeSource={RelativeSource AncestorType=Window}}"
+                                        CommandParameter="{Binding}"
+                                        ToolTip="Удалить"
+                                        Background="#FFB6B6"
+                                        Width="40" Margin="3"/>
+                            </StackPanel>
+                        </Grid>
+                    </Border>
+                </DataTemplate>
+            </ListBox.ItemTemplate>
+        </ListBox>
+
+        <!-- Подвал с количеством -->
+        <Border Grid.Row="2" Background="#F0F0F0" Padding="10" BorderBrush="Gray" BorderThickness="0,1,0,0">
+            <TextBlock>
+                <Run Text="Всего заказов: "/>
+                <Run Text="{Binding Orders.Count, Mode=OneWay}" FontWeight="Bold"/>
+            </TextBlock>
+        </Border>
     </Grid>
 </Window>
